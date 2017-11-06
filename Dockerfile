@@ -1,13 +1,13 @@
-FROM elasticsearch:2.4.1
-MAINTAINER wangsike "wsk@acegear.com"
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends --force-yes maven openjdk-8-jdk && \
-    rm -rf /var/lib/apt/lists/*
-ADD https://github.com/medcl/elasticsearch-analysis-ik/archive/v1.10.1.tar.gz /tmp/elasticsearch-analysis-ik.tar.gz
-RUN tar -xvf /tmp/elasticsearch-analysis-ik.tar.gz -C /tmp && \
-    cd /tmp/elasticsearch-analysis-ik-1.10.1 && \
-    mvn package && \
-    unzip target/releases/elasticsearch-analysis-ik-1.10.1.zip -d /usr/share/elasticsearch/plugins/ik && \
-    cd / && \
-    rm -rf /tmp/elasticsearch-analysis-ik*
+FROM anapsix/alpine-java:jre8  
+MAINTAINER firewarm LightingLiu <liuyg@liuyingguang.cn>  
+ENV ES_PKG_NAME elasticsearch-2.3.3  
+ADD $ES_PKG_NAME.tar.gz /usr/share/  
+ADD elasticsearch/ /usr/share/$ES_PKG_NAME/  
+RUN cd /usr/share/ && \  
+mv $ES_PKG_NAME elasticsearch && \  
+chmod +x /usr/share/elasticsearch/bin/*  
+ENV PATH /usr/share/elasticsearch/bin:$PATH  
+# Define default command.  
+CMD ["elasticsearch"]  
+EXPOSE 9200  
+EXPOSE 9300  
